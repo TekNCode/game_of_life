@@ -1,11 +1,40 @@
 #include <iostream>
 #include <string>
 
+#include "game.h"
+
+// magic numbers bad!
+#define DEFAULT_BOARD_SIZE_X 64
+#define DEFAULT_BOARD_SIZE_Y 32
+#define DEFAULT_ITERATIONS 50000
+
+#define DEFAULT_BOARD_VALUE_COUNT 10
+uint32_t defaultBoard[DEFAULT_BOARD_VALUE_COUNT][2] = {
+{0,4},
+{1,3},
+{1,4},
+{1,5},
+{3,2},
+{3,3},
+{3,4},
+{5,0},
+{5,1},
+{7,0}
+};
+
 int main(int argc, char** argv)
 {
     // declare initial variables
     std::string response;
     std::string::size_type stringSize;
+    std::unique_ptr<Game> game = std::make_unique<Game>();
+
+    // setup game board
+    if(!game->Init(DEFAULT_BOARD_SIZE_X,DEFAULT_BOARD_SIZE_Y)){
+        std::cout << "Error, unable to initalize game. Exiting." << std::endl;
+        game->Shutdown();
+        return -1;
+    }
 
     // print banner and instructions
     std::cout << "Game of Life" << std::endl;
@@ -20,11 +49,9 @@ int main(int argc, char** argv)
 
     // if 'd' load default game ( quickest for testing )
     if( response.compare("d") == 0 ){
-        bool done = false;
-        while(!done){
-            
+        for(int i = 0; i < DEFAULT_BOARD_VALUE_COUNT; ++i){
+            game->setCellStatus(defaultBoard[i][0],defaultBoard[i][1],true);
         }
-
     } else {    // if 'i' or any other value is used, assume not default and get board info
         // else variables
         int32_t numInputCells = 0;
@@ -50,12 +77,16 @@ int main(int argc, char** argv)
             std::cin >> response;
 
             // todo: santiy check input
-            int32_t delimPos = response.find(delim);
+            size_t delimPos = response.find(delim);
             xCordString = response.substr(0,delimPos);
             yCordString = response.substr(delimPos+1);
 
+            // todo: sanity check
+            int32_t xPos = std::stoi(xCordString, &stringSize);
+            int32_t yPos = std::stoi(yCordString, &stringSize);
+
             // todo: call game class
-            // setCellAlive(x,y)
+            game->setCellStatus(xPos,yPos,true);
         }
 
     }
@@ -65,13 +96,17 @@ int main(int argc, char** argv)
 
     // most common condition is Y
     if((response.compare("Y") == 0) || (response.compare("y") == 0)) {
-        //todo: game loop
-        //runFor(50000);
+        
+        // run iterations
+        game->LoopFor(DEFAULT_ITERATIONS);
 
-        //todo: print result
-        //print();
+        // print result
+        game->print();
     }
 
+    // cleanup time
     std::cout << "Exiting.";
+    game->Shutdown();
+
     return 0;
 }
