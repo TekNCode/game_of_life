@@ -51,7 +51,7 @@ Game::LoopFor(uint64_t iterations){
         // debug print
         std::cout << "Processing iteration: "<< i + 1 << '\r';
         if(!Step()){
-            std::cout << "No cells changed, ending early" << std::endl;
+            std::cout << std::endl << "No cells changed, ending early" << std::endl;
             return;
         }
     }
@@ -92,21 +92,26 @@ Game::Step(void){
                             }
                         }
 
-                        // check to see if need to switch state
-                        if(currentBoard->isAlive(x,y)){
-                            if(alive < 2 || alive > 3){
-                                nextBoard->setCellStatus(x,y,false);
-                                changed = true;
-                            }
-                        } else {
-                            if(alive == 3){
-                                nextBoard->setCellStatus(x,y,true);
-                                changed = true;
-                            }
-                        }
                     }
                 }
             }
+            // check to see if need to switch state
+            if(currentBoard->isAlive(x,y)){
+                if(alive < 2 || alive > 3){
+                    nextBoard->setCellStatus(x,y,false);
+                    changed = true;
+                    //debug
+                    //std::cout << x << "," << y << " " << "dead" << std::endl;
+                }
+            } else {
+                if(alive == 3){
+                    nextBoard->setCellStatus(x,y,true);
+                    changed = true;
+                    //debug
+                    //std::cout << x << "," << y << " " << "alive" << std::endl;
+                }
+            }
+
         }
         if(!changed){
             return false;
