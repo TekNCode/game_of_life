@@ -113,9 +113,9 @@ Game::Step(void){
             }
 
         }
-        if(!changed){
-            return false;
-        }
+    }
+    if(!changed){
+        return false;
     }
 
     // done processing, swap boards
