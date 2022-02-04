@@ -49,7 +49,7 @@ void
 Game::LoopFor(uint64_t iterations){
     for( uint64_t i = 0; i < iterations; ++i){
         // debug print
-        std::cout << "Processing iteration: "<< i << '\r';
+        std::cout << "Processing iteration: "<< i + 1 << '\r';
         if(!Step()){
             std::cout << "No cells changed, ending early" << std::endl;
             return;
@@ -67,7 +67,7 @@ Game::Step(void){
     // use accessor functions
     std::shared_ptr<Board> currentBoard = GetCurrentBoard();
     std::shared_ptr<Board> nextBoard = GetNextBoard();
-    copyBoard(currentBoard,nextBoard);
+    CopyBoard(currentBoard,nextBoard);
 
     for(uint32_t x = 0; x < m_sizeX; ++x){
         for(uint32_t y = 0; y < m_sizeY; ++y){
@@ -95,12 +95,12 @@ Game::Step(void){
                         // check to see if need to switch state
                         if(currentBoard->isAlive(x,y)){
                             if(alive < 2 || alive > 3){
-                                currentBoard->setCellStatus(x,y,false);
+                                nextBoard->setCellStatus(x,y,false);
                                 changed = true;
                             }
                         } else {
                             if(alive == 3){
-                                currentBoard->setCellStatus(x,y,true);
+                                nextBoard->setCellStatus(x,y,true);
                                 changed = true;
                             }
                         }
@@ -114,7 +114,10 @@ Game::Step(void){
     }
 
     // done processing, swap boards
-    swapBoards();
+    SwapBoards();
+
+    // debug print
+    //Print();
 
     return true;
 }
@@ -138,12 +141,12 @@ Game::GetNextBoard(void){
 }
 
 void
-Game::swapBoards(void){
+Game::SwapBoards(void){
     m_useBoard1 = !m_useBoard1;
 }
 
 void
-Game::copyBoard(std::shared_ptr<Board> src, std::shared_ptr<Board> dst){
+Game::CopyBoard(std::shared_ptr<Board> src, std::shared_ptr<Board> dst){
     for(uint32_t x = 0; x < m_sizeX; ++x){
         for(uint32_t y = 0; y < m_sizeY; ++y){
             dst->setCellStatus(x,y,src->isAlive(x,y));
@@ -152,12 +155,12 @@ Game::copyBoard(std::shared_ptr<Board> src, std::shared_ptr<Board> dst){
 }
 
 void
-Game::setCellStatus(uint32_t x, uint32_t y, bool alive){
+Game::SetCellStatus(uint32_t x, uint32_t y, bool alive){
     GetCurrentBoard()->setCellStatus(x,y,alive);
 }
 
 void
-Game::print(void){
+Game::Print(void){
     // print Live 1.06 header line
     std::cout << std::endl << "#Life 1.06" << std::endl;
     std::shared_ptr<Board> currentBoard = GetCurrentBoard();

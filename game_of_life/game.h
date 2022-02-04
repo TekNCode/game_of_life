@@ -16,15 +16,15 @@ public:
     void LoopFor(uint64_t iterations);
     bool Step(void);
     
-    void setCellStatus(uint32_t x, uint32_t y, bool alive);
+    void SetCellStatus(uint32_t x, uint32_t y, bool alive);
     
-    void print(void);
+    void Print(void);
 
 protected:
     std::shared_ptr<Board> GetCurrentBoard(void);
     std::shared_ptr<Board> GetNextBoard(void);
-    void swapBoards(void);
-    void copyBoard(std::shared_ptr<Board> src, std::shared_ptr<Board> dst);
+    void SwapBoards(void);
+    void CopyBoard(std::shared_ptr<Board> src, std::shared_ptr<Board> dst);
 
 private:
     std::shared_ptr<Board> m_board1;

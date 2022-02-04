@@ -50,7 +50,7 @@ int main(int argc, char** argv)
     // if 'd' load default game ( quickest for testing )
     if( response.compare("d") == 0 ){
         for(int i = 0; i < DEFAULT_BOARD_VALUE_COUNT; ++i){
-            game->setCellStatus(defaultBoard[i][0],defaultBoard[i][1],true);
+            game->SetCellStatus(defaultBoard[i][0],defaultBoard[i][1],true);
         }
     } else {    // if 'i' or any other value is used, assume not default and get board info
         // else variables
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
             int32_t yPos = std::stoi(yCordString, &stringSize);
 
             // todo: call game class
-            game->setCellStatus(xPos,yPos,true);
+            game->SetCellStatus(xPos,yPos,true);
         }
 
     }
@@ -101,7 +101,7 @@ int main(int argc, char** argv)
         game->LoopFor(DEFAULT_ITERATIONS);
 
         // print result
-        game->print();
+        game->Print();
     }
 
     // cleanup time
